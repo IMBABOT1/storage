@@ -8,18 +8,18 @@
 <?import javafx.scene.layout.HBox?>
 <VBox fx:controller="com.imbabot.storage.client.Controller" xmlns:fx="http://javafx.com/fxml">
     <HBox VBox.vgrow="ALWAYS">
-        <ListView HBox.hgrow="ALWAYS" editable="false"></ListView>
-        <ListView HBox.hgrow="ALWAYS" editable="false"></ListView>
+        <ListView fx:id="clientList" HBox.hgrow="ALWAYS" editable="false"></ListView>
+        <ListView fx:id="serverList" HBox.hgrow="ALWAYS" editable="false"></ListView>
     </HBox>
     <HBox>
 
-        <Button text="Отправить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
-        <Button text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
-        <Button text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
-        <Button text="Завершить сессию" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button text="Send File" onAction="#sendFile" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button text="Delete File" onAction="#deleteFileFromClient" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button text="Refresh" onAction="#refreshClientList" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button text="End Session" onAction="#closeSession" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
 
-        <Button text="Скачать файл" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
-        <Button text="Удалить файл" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
-        <Button text="Обновить" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button text="Download File" onAction="#downloadFile" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button text="Delete File" onAction="#deleteFileFromServer" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button text="Refresh" onAction="#refreshServerList" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
     </HBox>
 </VBox>
