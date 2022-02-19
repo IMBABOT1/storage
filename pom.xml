@@ -14,25 +14,13 @@
         <module>Common</module>
     </modules>
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>4.1.63.Final</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.imbabot.storage</groupId>
-            <artifactId>Client</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.imbabot.storage</groupId>
-            <artifactId>Common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <properties>
