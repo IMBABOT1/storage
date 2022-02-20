@@ -8,7 +8,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.ReferenceCounted;
+import javafx.application.Platform;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,6 +38,12 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                 ServerFiles serverFiles = new ServerFiles(list);
                 ctx.writeAndFlush(serverFiles);
             }
+
+            if (msg instanceof FileMessage){
+                FileMessage fm = (FileMessage) msg;
+                Files.write(Paths.get("server_storage/" + fm.getFileName()), fm.getData());
+            }
+
         }finally {
             ReferenceCountUtil.release(msg);
         }

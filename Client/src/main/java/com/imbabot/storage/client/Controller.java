@@ -80,8 +80,12 @@ public class Controller implements Initializable {
     }
 
 
-    public void sendFile(){
-
+    public void sendFile()throws IOException {
+        if (Files.exists(Paths.get("client_storage/" + clientList.getSelectionModel().getSelectedItem()))){
+            FileMessage fm = new FileMessage(Paths.get("client_storage/" + clientList.getSelectionModel().getSelectedItem()));
+            Network.sendMsg(fm);
+            refreshServerList();
+        }
     }
 
     public void deleteFileFromClient(){
