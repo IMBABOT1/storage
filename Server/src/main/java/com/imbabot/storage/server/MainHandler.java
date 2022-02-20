@@ -38,6 +38,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
+
     private void sendFileToClient(ChannelHandlerContext ctx, Object msg) throws IOException{
         FileRequest fr = (FileRequest) msg;
         if (Files.exists(Paths.get("server_storage/" + fr.getFileName()))){

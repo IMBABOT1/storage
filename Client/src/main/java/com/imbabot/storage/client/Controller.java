@@ -41,7 +41,7 @@ public class Controller implements Initializable {
                     while (true) {
                         AbstractMessage msg = Network.readObj();
                         if (msg instanceof FileMessage) {
-                           clientHandler.downloadFile(msg);
+                            clientHandler.downloadFile(msg);
                         }
                         if (msg instanceof ServerFiles) {
                             clientHandler.getServerFiles(msg);
@@ -85,7 +85,7 @@ public class Controller implements Initializable {
     }
 
     public void closeSession(){
-       System.exit(0);
+        System.exit(0);
     }
 
     public void downloadFile(){
