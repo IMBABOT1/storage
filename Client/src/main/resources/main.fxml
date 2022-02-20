@@ -12,20 +12,22 @@
     <HBox fx:id="loginBox">
         <TextField fx:id="loginField" HBox.hgrow="ALWAYS"></TextField>
         <PasswordField fx:id="passField" HBox.hgrow="ALWAYS"></PasswordField>
-        <Button HBox.hgrow="ALWAYS" text="login" onAction="#tryToAuth"></Button>
+        <Button fx:id="loginButton" HBox.hgrow="ALWAYS" text="login" onAction="#tryToAuth"></Button>
     </HBox>
+
     <HBox VBox.vgrow="ALWAYS">
         <ListView fx:id="clientList" HBox.hgrow="ALWAYS" editable="false"></ListView>
         <ListView fx:id="serverList" HBox.hgrow="ALWAYS" editable="false"></ListView>
-
     </HBox>
+
+
     <HBox>
-        <Button text="RefreshClient" onAction="#refreshClientList" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
-        <Button text="Upload File" onAction="#sendFile" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
-        <Button text="Delete file from client" onAction="#deleteFileFromClient" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
-        <Button text="End Session" onAction="#closeSession" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
-        <Button text="RefreshServer" onAction="#refreshServerList" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
-        <Button text="Download File" onAction="#downloadFile" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
-        <Button text="Delete file from server" onAction="#deleteFileFromServer" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button fx:id="refreshClient" text="RefreshClient" onAction="#refreshClientList" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button fx:id="sendFile" text="Upload File" onAction="#sendFile" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button fx:id="deleteFromClient" text="Delete file from client" onAction="#deleteFileFromClient" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button fx:id="closeSession" text="End Session" onAction="#closeSession" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button fx:id="refreshServerList" text="RefreshServer" onAction="#refreshServerList" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button fx:id="downloadFile" text="Download File" onAction="#downloadFile" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
+        <Button fx:id="deleteFromServer" text="Delete file from server" onAction="#deleteFileFromServer" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
     </HBox>
 </VBox>

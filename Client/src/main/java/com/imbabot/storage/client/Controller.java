@@ -8,7 +8,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,6 +28,18 @@ public class Controller implements Initializable {
 
     @FXML
     ListView<String> serverList;
+
+    @FXML
+    Button loginButton;
+
+    @FXML
+    TextField loginField;
+
+    @FXML
+    PasswordField passField;
+
+    @FXML
+    Button refreshClient, sendFile, deleteFromClient, closeSession, refreshServerList, downloadFile, deleteFromServer;
 
 
 
