@@ -27,23 +27,7 @@ public class Controller implements Initializable {
 
 
     private Path clientStorage = Paths.get("client_Storage/");
-    private Path serverStorage = Paths.get("server_Storage/");
 
-    public ListView<String> getClientList() {
-        return clientList;
-    }
-
-    public ListView<String> getServerList() {
-        return serverList;
-    }
-
-    public Path getClientStorage() {
-        return clientStorage;
-    }
-
-    public Path getServerStorage() {
-        return serverStorage;
-    }
 
     private ClientHandler clientHandler;
 
@@ -88,8 +72,8 @@ public class Controller implements Initializable {
         }
     }
 
-    public void deleteFileFromClient(){
-
+    public void deleteFileFromClient() throws IOException{
+        Files.delete(Paths.get("client_storage/" + clientList.getSelectionModel().getSelectedItem()));
     }
 
     public void refreshClientList(){

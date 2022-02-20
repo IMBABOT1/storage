@@ -19,22 +19,17 @@ import java.util.List;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
 
-    private Path serverStorage = Paths.get("server_Storage/");
+
 
 
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception{
         try {
             if (msg instanceof FileRequest){
-                FileRequest fr = (FileRequest) msg;
-
-                if (Files.exists(Paths.get("server_storage/" + fr.getFileName()))){
-                    FileMessage fm = new FileMessage(Paths.get("server_storage/" + fr.getFileName()));
-                    ctx.writeAndFlush(fm);
-                }
+                sendFileToClient(ctx, msg);
             }
             if (msg instanceof RequestServerFiles) {
                 List<String> list = new ArrayList<>();
-                Files.list(serverStorage).map(path -> path.getFileName().toString()).forEach(o -> list.add(o));
+                Files.list( Paths.get("server_Storage/")).map(path -> path.getFileName().toString()).forEach(o -> list.add(o));
                 ServerFiles serverFiles = new ServerFiles(list);
                 ctx.writeAndFlush(serverFiles);
             }
@@ -48,6 +43,15 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             ReferenceCountUtil.release(msg);
         }
     }
+
+    private void sendFileToClient(ChannelHandlerContext ctx, Object msg) throws IOException{
+        FileRequest fr = (FileRequest) msg;
+        if (Files.exists(Paths.get("server_storage/" + fr.getFileName()))){
+            FileMessage fm = new FileMessage(Paths.get("server_storage/" + fr.getFileName()));
+            ctx.writeAndFlush(fm);
+        }
+    }
+
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause){
         cause.printStackTrace();
