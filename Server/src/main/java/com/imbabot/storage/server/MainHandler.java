@@ -2,6 +2,7 @@ package com.imbabot.storage.server;
 //
 import com.imbabot.storage.common.FileMessage;
 import com.imbabot.storage.common.FileRequest;
+import com.imbabot.storage.common.RequestServerFiles;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
@@ -22,6 +23,9 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                     FileMessage fm = new FileMessage(Paths.get("server_storage/" + fr.getFileName()));
                     ctx.writeAndFlush(fm);
                 }
+            }
+            if (msg instanceof RequestServerFiles) {
+
             }
         }finally {
             ReferenceCountUtil.release(msg);
