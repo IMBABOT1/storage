@@ -44,6 +44,7 @@ public class Controller implements Initializable {
 
 
     private ClientHandler clientHandler;
+    private String name;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
