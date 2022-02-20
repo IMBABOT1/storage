@@ -102,7 +102,7 @@ public class Controller implements Initializable {
     }
 
     public void downloadFile(){
-
+        Network.sendMsg(new FileRequest(serverList.getSelectionModel().getSelectedItem()));
     }
 
     public void deleteFileFromServer(){
@@ -110,11 +110,6 @@ public class Controller implements Initializable {
     }
 
     public void refreshServerList(){
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Network.sendMsg(new RequestServerFiles());
-            }
-        });
+        Network.sendMsg(new RequestServerFiles());
     }
 }

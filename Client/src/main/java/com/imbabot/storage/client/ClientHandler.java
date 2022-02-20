@@ -31,9 +31,18 @@ public class ClientHandler {
         });
     }
 
-    void downloadFile(AbstractMessage msg) throws ClassNotFoundException, IOException {
-        FileMessage fm = (FileMessage) msg;
-        Files.write(Paths.get("client_storage/" + fm.getFileName()), fm.getData());
+    void downloadFile(AbstractMessage msg)  {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                FileMessage fm = (FileMessage) msg;
+                try {
+                    Files.write(Paths.get("client_storage/" + fm.getFileName()), fm.getData());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                controller.refreshClientList();
+            }
+        });
     }
-
 }
