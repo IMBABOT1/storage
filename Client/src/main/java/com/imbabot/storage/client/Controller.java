@@ -50,10 +50,10 @@ public class Controller implements Initializable {
                     while (true) {
                         AbstractMessage msg = Network.readObj();
                         if (msg instanceof FileMessage) {
-                           clientHandler.downloadFile();
+                           clientHandler.downloadFile(msg);
                         }
                         if (msg instanceof ServerFiles) {
-                            clientHandler.getServerFiles();
+                            clientHandler.getServerFiles(msg);
                         }
                     }
                 } catch (ClassNotFoundException | IOException e) {

@@ -18,10 +18,8 @@ public class ClientHandler {
         this.controller = controller;
     }
 
-    void getServerFiles() throws ClassNotFoundException, IOException {
-        AbstractMessage msg = Network.readObj();
+    void getServerFiles(AbstractMessage msg) throws ClassNotFoundException, IOException {
         ServerFiles sf = (ServerFiles) msg;
-
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -32,8 +30,7 @@ public class ClientHandler {
         });
     }
 
-    void downloadFile() throws ClassNotFoundException, IOException {
-        AbstractMessage msg = Network.readObj();
+    void downloadFile(AbstractMessage msg) throws ClassNotFoundException, IOException {
         FileMessage fm = (FileMessage) msg;
         Files.write(Paths.get("client_storage/" + fm.getFileName()), fm.getData());
     }
