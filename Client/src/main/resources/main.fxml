@@ -9,9 +9,10 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.PasswordField?>
 <VBox fx:controller="com.imbabot.storage.client.Controller" xmlns:fx="http://javafx.com/fxml">
-    <HBox>
+    <HBox fx:id="loginBox">
         <TextField fx:id="loginField" HBox.hgrow="ALWAYS"></TextField>
         <PasswordField fx:id="passField" HBox.hgrow="ALWAYS"></PasswordField>
+        <Button HBox.hgrow="ALWAYS" text="login" onAction="#tryToAuth"></Button>
     </HBox>
     <HBox VBox.vgrow="ALWAYS">
         <ListView fx:id="clientList" HBox.hgrow="ALWAYS" editable="false"></ListView>

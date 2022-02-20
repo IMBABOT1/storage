@@ -45,4 +45,8 @@ public class ClientHandler {
             }
         });
     }
+
+    void closeConnection(AbstractMessage msg){
+        System.exit(0);
+    }
 }

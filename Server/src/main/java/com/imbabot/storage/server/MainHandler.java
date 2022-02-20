@@ -25,12 +25,14 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             if (msg instanceof RequestServerFiles) {
                 sendServerFilesList(ctx, msg);
             }
-
             if (msg instanceof FileMessage){
                 getFileFromClient(ctx, msg);
             }
             if (msg instanceof DeleteFileFromServer){
                 deleteFile(ctx, msg);
+            }
+            if (msg instanceof CloseConnection){
+                closeConnection(ctx, msg);
             }
 
         }finally {
@@ -64,6 +66,11 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         Files.delete(Paths.get("server_storage/" + delete.getName()));
     }
 
+    private void closeConnection(ChannelHandlerContext ctx, Object msg) throws IOException{
+        CloseConnection cs = new CloseConnection();
+        ctx.writeAndFlush(cs);
+        ctx.close();
+    }
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause){
         cause.printStackTrace();

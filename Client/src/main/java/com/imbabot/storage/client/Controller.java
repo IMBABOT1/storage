@@ -5,6 +5,7 @@ import com.imbabot.storage.common.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
@@ -46,6 +47,9 @@ public class Controller implements Initializable {
                         if (msg instanceof ServerFiles) {
                             clientHandler.getServerFiles(msg);
                         }
+                        if (msg instanceof CloseConnection){
+                            clientHandler.closeConnection(msg);
+                        }
                     }
                 } catch (ClassNotFoundException | IOException e) {
                     e.printStackTrace();
@@ -85,7 +89,7 @@ public class Controller implements Initializable {
     }
 
     public void closeSession(){
-        System.exit(0);
+        Network.sendMsg(new CloseConnection());
     }
 
     public void downloadFile(){
@@ -99,5 +103,9 @@ public class Controller implements Initializable {
 
     public void refreshServerList(){
         Network.sendMsg(new RequestServerFiles());
+    }
+
+    public void tryToAuth(ActionEvent actionEvent) {
+
     }
 }
