@@ -16,8 +16,12 @@ import java.util.List;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
 
+    private static AuthManager manager;
 
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception{
+
+        manager = new BasicAuthManager();
+
         try {
             if (msg instanceof FileRequest){
                 sendFileToClient(ctx, msg);
@@ -33,6 +37,12 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             }
             if (msg instanceof CloseConnection){
                 closeConnection(ctx, msg);
+            }
+            if (msg instanceof TryToAuth){
+                TryToAuth auth = (TryToAuth) msg;
+                String name = manager.getNickNameByLoginAndPassword(auth.getLogin(), auth.getPassword());
+                AuthName authName = new AuthName(name);
+                ctx.writeAndFlush(authName);
             }
 
         }finally {

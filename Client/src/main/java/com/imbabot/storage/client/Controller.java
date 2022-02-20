@@ -46,6 +46,10 @@ public class Controller implements Initializable {
     private ClientHandler clientHandler;
     private String name;
 
+    public String getName(){
+        return name;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         clientHandler = new ClientHandler(this);
@@ -57,22 +61,29 @@ public class Controller implements Initializable {
                 try {
                     while (true) {
                         AbstractMessage msg = Network.readObj();
-                        if (msg instanceof FileMessage) {
-                            clientHandler.downloadFile(msg);
-                        }
-                        if (msg instanceof ServerFiles) {
-                            clientHandler.getServerFiles(msg);
-                        }
-                        if (msg instanceof CloseConnection){
-                            clientHandler.closeConnection(msg);
+                        break;
+                    }
+
+                    while (true) {
+                        while (true) {
+                            AbstractMessage msg = Network.readObj();
+                            if (msg instanceof FileMessage) {
+                                clientHandler.downloadFile(msg);
+                            }
+                            if (msg instanceof ServerFiles) {
+                                clientHandler.getServerFiles(msg);
+                            }
+                            if (msg instanceof CloseConnection) {
+                                clientHandler.closeConnection(msg);
+                            }
                         }
                     }
                 } catch (ClassNotFoundException | IOException e) {
                     e.printStackTrace();
-                } finally {
+                }finally {
                     Network.stop();
                 }
-            }
+                }
         });
         t.setDaemon(true);
         t.start();
@@ -122,6 +133,8 @@ public class Controller implements Initializable {
     }
 
     public void tryToAuth(ActionEvent actionEvent) {
-
+        Network.sendMsg(new TryToAuth(loginField.getText(), passField.getText()));
+        loginField.clear();
+        passField.clear();
     }
 }
