@@ -20,23 +20,17 @@ import java.util.List;
 public class MainHandler extends ChannelInboundHandlerAdapter {
 
 
-
-
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception{
         try {
             if (msg instanceof FileRequest){
                 sendFileToClient(ctx, msg);
             }
             if (msg instanceof RequestServerFiles) {
-                List<String> list = new ArrayList<>();
-                Files.list( Paths.get("server_Storage/")).map(path -> path.getFileName().toString()).forEach(o -> list.add(o));
-                ServerFiles serverFiles = new ServerFiles(list);
-                ctx.writeAndFlush(serverFiles);
+                sendServerFilesList(ctx, msg);
             }
 
             if (msg instanceof FileMessage){
-                FileMessage fm = (FileMessage) msg;
-                Files.write(Paths.get("server_storage/" + fm.getFileName()), fm.getData());
+                getFileFromClient(ctx, msg);
             }
 
         }finally {
@@ -50,6 +44,18 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             FileMessage fm = new FileMessage(Paths.get("server_storage/" + fr.getFileName()));
             ctx.writeAndFlush(fm);
         }
+    }
+
+    private void sendServerFilesList(ChannelHandlerContext ctx, Object msg) throws IOException{
+        List<String> list = new ArrayList<>();
+        Files.list( Paths.get("server_Storage/")).map(path -> path.getFileName().toString()).forEach(o -> list.add(o));
+        ServerFiles serverFiles = new ServerFiles(list);
+        ctx.writeAndFlush(serverFiles);
+    }
+
+    private void getFileFromClient(ChannelHandlerContext ctx, Object msg) throws IOException{
+        FileMessage fm = (FileMessage) msg;
+        Files.write(Paths.get("server_storage/" + fm.getFileName()), fm.getData());
     }
 
 
