@@ -1,9 +1,8 @@
 package com.imbabot.storage.client;
 
 
-import com.imbabot.storage.common.AbstractMessage;
-import com.imbabot.storage.common.FileMessage;
-import com.imbabot.storage.common.FileRequest;
+import com.imbabot.storage.common.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -29,32 +28,65 @@ public class Controller implements Initializable {
     private Path clientStorage = Paths.get("client_Storage/");
     private Path serverStorage = Paths.get("server_Storage/");
 
+    public ListView<String> getClientList() {
+        return clientList;
+    }
+
+    public ListView<String> getServerList() {
+        return serverList;
+    }
+
+    private ClientHandler clientHandler;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-         Network.start(8189);
-         Thread t = new Thread(new Runnable() {
-             @Override
-             public void run() {
-                 try {
-                     while (true){
-                         AbstractMessage msg = Network.readObj();
-                         if (msg instanceof FileMessage){
-                             FileMessage fm =  (FileMessage) msg;
-                             Files.write(Paths.get("client_storage/" + fm.getFileName()), fm.getData());
-                         }
-                     }
-                 }catch (ClassNotFoundException | IOException e){
-                     e.printStackTrace();
-                 }finally {
-                     Network.stop();
-                 }
-             }
-         });
-         t.setDaemon(true);
-         t.start();
+        clientHandler = new ClientHandler(this);
+
+        Network.start(8189);
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (true) {
+                        AbstractMessage msg = Network.readObj();
+                        if (msg instanceof FileMessage) {
+                           clientHandler.downloadFile();
+                        }
+                        if (msg instanceof ServerFiles) {
+                            clientHandler.getServerFiles();
+                        }
+                    }
+                } catch (ClassNotFoundException | IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    Network.stop();
+                }
+            }
+        });
+        t.setDaemon(true);
+        t.start();
 
         refreshClientList();
     }
+
+
+
+    private void getServerFiles() throws ClassNotFoundException, IOException {
+        AbstractMessage msg = Network.readObj();
+        ServerFiles sf = (ServerFiles) msg;
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                for (String s : sf.getList()) {
+                    serverList.getItems().add(s);
+                }
+            }
+        });
+    }
+
+
+
 
     public void sendFile(){
 
@@ -86,6 +118,11 @@ public class Controller implements Initializable {
     }
 
     public void refreshServerList(){
-
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Network.sendMsg(new RequestServerFiles());
+            }
+        });
     }
 }
