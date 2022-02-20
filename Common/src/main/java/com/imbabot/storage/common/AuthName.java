@@ -8,7 +8,7 @@ public class AuthName extends AbstractMessage{
         return name;
     }
 
-    public AuthName(String name){
+    public void setName(String name){
         this.name = name;
     }
 

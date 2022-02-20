@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 import java.net.URL;
@@ -41,18 +42,51 @@ public class Controller implements Initializable {
     @FXML
     Button refreshClient, sendFile, deleteFromClient, closeSession, refreshServerList, downloadFile, deleteFromServer;
 
-
+    @FXML
+    HBox loginBox;
 
     private ClientHandler clientHandler;
-    private String name;
-
+    private String nickName;
     public String getName(){
-        return name;
+        return nickName;
+    }
+    private boolean authenticated;
+
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
+        loginBox.setVisible(!authenticated);
+        loginBox.setManaged(!authenticated);
+        passField.setVisible(!authenticated);
+        passField.setManaged(!authenticated);
+        loginField.setVisible(!authenticated);
+        loginField.setManaged(!authenticated);
+        clientList.setVisible(authenticated);
+        clientList.setManaged(authenticated);
+        serverList.setVisible(authenticated);
+        serverList.setManaged(authenticated);
+        loginButton.setVisible(!authenticated);
+        loginButton.setManaged(!authenticated);
+        refreshClient.setVisible(authenticated);
+        refreshClient.setManaged(authenticated);
+        sendFile.setVisible(authenticated);
+        sendFile.setManaged(authenticated);
+        deleteFromClient.setVisible(authenticated);
+        deleteFromClient.setManaged(authenticated);
+        deleteFromServer.setVisible(authenticated);
+        deleteFromServer.setManaged(authenticated);
+        closeSession.setVisible(authenticated);
+        closeSession.setManaged(authenticated);
+        downloadFile.setVisible(authenticated);
+        downloadFile.setManaged(authenticated);
+        refreshServerList.setVisible(authenticated);
+        refreshServerList.setManaged(authenticated);
+
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         clientHandler = new ClientHandler(this);
+        setAuthenticated(false);
 
         Network.start(8189);
         Thread t = new Thread(new Runnable() {
@@ -61,10 +95,14 @@ public class Controller implements Initializable {
                 try {
                     while (true) {
                         AbstractMessage msg = Network.readObj();
-                        break;
+                        if (msg instanceof AuthName){
+                            setAuthenticated(true);
+                            AuthName name = new AuthName();
+                            nickName = name.getName();
+                            break;
+                        }
                     }
-
-                    while (true) {
+                    while (true && authenticated == true) {
                         while (true) {
                             AbstractMessage msg = Network.readObj();
                             if (msg instanceof FileMessage) {

@@ -41,8 +41,13 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             if (msg instanceof TryToAuth){
                 TryToAuth auth = (TryToAuth) msg;
                 String name = manager.getNickNameByLoginAndPassword(auth.getLogin(), auth.getPassword());
-                AuthName authName = new AuthName(name);
-                ctx.writeAndFlush(authName);
+                if (name != null) {
+                    AuthName authName = new AuthName();
+                    authName.setName(name);
+                    ctx.writeAndFlush(authName);
+                }else {
+                    System.out.println("Invalid login or password");
+                }
             }
 
         }finally {
