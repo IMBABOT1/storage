@@ -1,6 +1,7 @@
 package com.imbabot.storage.client;
 
 import com.imbabot.storage.common.AbstractMessage;
+import com.imbabot.storage.common.AuthName;
 import com.imbabot.storage.common.FileMessage;
 import com.imbabot.storage.common.ServerFiles;
 import javafx.application.Platform;
@@ -45,6 +46,7 @@ public class ClientHandler {
             }
         });
     }
+
 
     void closeConnection(AbstractMessage msg){
         System.exit(0);

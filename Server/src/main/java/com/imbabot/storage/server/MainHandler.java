@@ -16,12 +16,9 @@ import java.util.List;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
 
-    private static AuthManager manager;
+    private static AuthManager manager = new BasicAuthManager();
 
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception{
-
-        manager = new BasicAuthManager();
-
         try {
             if (msg instanceof FileRequest){
                 sendFileToClient(ctx, msg);
@@ -39,15 +36,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                 closeConnection(ctx, msg);
             }
             if (msg instanceof TryToAuth){
-                TryToAuth auth = (TryToAuth) msg;
-                String name = manager.getNickNameByLoginAndPassword(auth.getLogin(), auth.getPassword());
-                if (name != null) {
-                    AuthName authName = new AuthName();
-                    authName.setName(name);
-                    ctx.writeAndFlush(authName);
-                }else {
-                    System.out.println("Invalid login or password");
-                }
+                tryToAuth(ctx, msg);
             }
 
         }finally {
@@ -90,5 +79,17 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause){
         cause.printStackTrace();
         ctx.close();
+    }
+
+    public void tryToAuth(ChannelHandlerContext ctx, Object msg){
+        TryToAuth auth = (TryToAuth) msg;
+        String name = manager.getNickNameByLoginAndPassword(auth.getLogin(), auth.getPassword());
+        if (name != null) {
+            AuthName authName = new AuthName();
+            authName.setName(name);
+            ctx.writeAndFlush(authName);
+        }else {
+            System.out.println("Invalid login or password");
+        }
     }
 }

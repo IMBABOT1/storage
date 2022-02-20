@@ -54,8 +54,8 @@ public class Controller implements Initializable {
 
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
-        loginBox.setVisible(!authenticated);
-        loginBox.setManaged(!authenticated);
+//        loginBox.setVisible(!authenticated);
+//        loginBox.setManaged(!authenticated);
         passField.setVisible(!authenticated);
         passField.setManaged(!authenticated);
         loginField.setVisible(!authenticated);
@@ -99,6 +99,8 @@ public class Controller implements Initializable {
                             setAuthenticated(true);
                             AuthName name = new AuthName();
                             nickName = name.getName();
+                            refreshClientList();
+                            refreshServerList();
                             break;
                         }
                     }
@@ -125,6 +127,7 @@ public class Controller implements Initializable {
         });
         t.setDaemon(true);
         t.start();
+
 
         refreshClientList();
         refreshServerList();
