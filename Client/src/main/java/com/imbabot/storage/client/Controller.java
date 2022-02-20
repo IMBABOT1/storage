@@ -72,6 +72,7 @@ public class Controller implements Initializable {
 
     public void deleteFileFromClient() throws IOException{
         Files.delete(Paths.get("client_storage/" + clientList.getSelectionModel().getSelectedItem()));
+        refreshClientList();
     }
 
     public void refreshClientList(){
@@ -93,6 +94,7 @@ public class Controller implements Initializable {
 
     public void deleteFileFromServer(){
         Network.sendMsg(new DeleteFileFromServer(serverList.getSelectionModel().getSelectedItem()));
+        refreshServerList();
     }
 
     public void refreshServerList(){
