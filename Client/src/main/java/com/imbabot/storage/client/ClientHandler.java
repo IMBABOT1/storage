@@ -23,6 +23,7 @@ public class ClientHandler {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                controller.serverList.getItems().clear();
                 for (String s : sf.getList()) {
                      controller.serverList.getItems().add(s);
                 }

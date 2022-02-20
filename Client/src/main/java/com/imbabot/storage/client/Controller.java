@@ -25,6 +25,7 @@ public class Controller implements Initializable {
     @FXML
     ListView<String> serverList;
 
+
     private Path clientStorage = Paths.get("client_Storage/");
     private Path serverStorage = Paths.get("server_Storage/");
 
@@ -34,6 +35,14 @@ public class Controller implements Initializable {
 
     public ListView<String> getServerList() {
         return serverList;
+    }
+
+    public Path getClientStorage() {
+        return clientStorage;
+    }
+
+    public Path getServerStorage() {
+        return serverStorage;
     }
 
     private ClientHandler clientHandler;
@@ -67,25 +76,8 @@ public class Controller implements Initializable {
         t.start();
 
         refreshClientList();
+        refreshServerList();
     }
-
-
-
-    private void getServerFiles() throws ClassNotFoundException, IOException {
-        AbstractMessage msg = Network.readObj();
-        ServerFiles sf = (ServerFiles) msg;
-
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                for (String s : sf.getList()) {
-                    serverList.getItems().add(s);
-                }
-            }
-        });
-    }
-
-
 
 
     public void sendFile(){
