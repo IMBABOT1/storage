@@ -1,9 +1,6 @@
 package com.imbabot.storage.server;
 //
-import com.imbabot.storage.common.FileMessage;
-import com.imbabot.storage.common.FileRequest;
-import com.imbabot.storage.common.RequestServerFiles;
-import com.imbabot.storage.common.ServerFiles;
+import com.imbabot.storage.common.*;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
@@ -32,6 +29,9 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             if (msg instanceof FileMessage){
                 getFileFromClient(ctx, msg);
             }
+            if (msg instanceof DeleteFileFromServer){
+                deleteFile(ctx, msg);
+            }
 
         }finally {
             ReferenceCountUtil.release(msg);
@@ -56,6 +56,11 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     private void getFileFromClient(ChannelHandlerContext ctx, Object msg) throws IOException{
         FileMessage fm = (FileMessage) msg;
         Files.write(Paths.get("server_storage/" + fm.getFileName()), fm.getData());
+    }
+
+    private void deleteFile(ChannelHandlerContext ctx, Object msg) throws IOException{
+        DeleteFileFromServer delete =  (DeleteFileFromServer) msg;
+        Files.delete(Paths.get("server_storage/" + delete.getName()));
     }
 
 

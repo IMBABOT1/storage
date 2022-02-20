@@ -26,8 +26,6 @@ public class Controller implements Initializable {
     ListView<String> serverList;
 
 
-    private Path clientStorage = Paths.get("client_Storage/");
-
 
     private ClientHandler clientHandler;
 
@@ -79,14 +77,14 @@ public class Controller implements Initializable {
     public void refreshClientList(){
         try {
             clientList.getItems().clear();
-            Files.list(clientStorage).map(path -> path.getFileName().toString()).forEach(o -> clientList.getItems().add(o));
+            Files.list(Paths.get("client_storage/")).map(path -> path.getFileName().toString()).forEach(o -> clientList.getItems().add(o));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void closeSession(){
-
+       System.exit(0);
     }
 
     public void downloadFile(){
@@ -94,7 +92,7 @@ public class Controller implements Initializable {
     }
 
     public void deleteFileFromServer(){
-
+        Network.sendMsg(new DeleteFileFromServer(serverList.getSelectionModel().getSelectedItem()));
     }
 
     public void refreshServerList(){
