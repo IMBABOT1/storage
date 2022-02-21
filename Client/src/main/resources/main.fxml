@@ -22,11 +22,9 @@
 
 
     <HBox>
-        <Button fx:id="refreshClient" text="RefreshClient" onAction="#refreshClientList" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
         <Button fx:id="sendFile" text="Upload File" onAction="#sendFile" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
         <Button fx:id="deleteFromClient" text="Delete file from client" onAction="#deleteFileFromClient" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
         <Button fx:id="closeSession" text="End Session" onAction="#closeSession" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
-        <Button fx:id="refreshServerList" text="RefreshServer" onAction="#refreshServerList" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
         <Button fx:id="downloadFile" text="Download File" onAction="#downloadFile" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
         <Button fx:id="deleteFromServer" text="Delete file from server" onAction="#deleteFileFromServer" HBox.hgrow="ALWAYS" maxWidth="Infinity"></Button>
     </HBox>

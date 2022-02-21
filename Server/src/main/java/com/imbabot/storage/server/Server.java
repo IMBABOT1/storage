@@ -13,9 +13,18 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 
 public class Server {
+    private AuthManager manager;
+    private Server server;
 
+    public AuthManager getManager(){
+        return manager;
+    }
 
     public void run() throws Exception {
+        manager = new SqlAuthManager();
+        manager.connect();
+        server = this;
+
         EventLoopGroup mainGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
@@ -30,7 +39,7 @@ public class Server {
                             socketChannel.pipeline().addLast(
                                     new ObjectDecoder(1024 * 1024 * 100, ClassResolvers.cacheDisabled(null)),
                                     new ObjectEncoder(),
-                                    new MainHandler());
+                                    new MainHandler(server));
                         }
                     })
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
@@ -39,6 +48,7 @@ public class Server {
         } finally {
             workerGroup.shutdownGracefully();
             mainGroup.shutdownGracefully();
+            manager.close();
         }
     }
 

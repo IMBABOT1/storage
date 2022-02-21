@@ -66,8 +66,6 @@ public class Controller implements Initializable {
         serverList.setManaged(authenticated);
         loginButton.setVisible(!authenticated);
         loginButton.setManaged(!authenticated);
-        refreshClient.setVisible(authenticated);
-        refreshClient.setManaged(authenticated);
         sendFile.setVisible(authenticated);
         sendFile.setManaged(authenticated);
         deleteFromClient.setVisible(authenticated);
@@ -78,8 +76,6 @@ public class Controller implements Initializable {
         closeSession.setManaged(authenticated);
         downloadFile.setVisible(authenticated);
         downloadFile.setManaged(authenticated);
-        refreshServerList.setVisible(authenticated);
-        refreshServerList.setManaged(authenticated);
 
     }
 

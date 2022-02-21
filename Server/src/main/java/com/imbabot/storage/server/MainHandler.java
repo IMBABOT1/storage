@@ -17,14 +17,15 @@ import java.util.List;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
 
-    private AuthManager manager;
+ //  private AuthManager manager;
     private static List<String> names = new ArrayList<>();
+    private Server server;
 
+    public MainHandler(Server server){
+        this.server = server;
+    }
 
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        manager = new SqlAuthManager();
-        manager.connect();
-
         try {
             if (msg instanceof FileRequest) {
                 sendFileToClient(ctx, msg);
@@ -42,11 +43,10 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                 closeConnection(ctx, msg);
             }
             if (msg instanceof TryToAuth) {
-                tryToAuth(ctx, msg);
+                tryToAuth(ctx, msg, server);
             }
         } finally {
             ReferenceCountUtil.release(msg);
-            manager.close();
         }
     }
 
@@ -87,9 +87,9 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         ctx.close();
     }
 
-    public void tryToAuth(ChannelHandlerContext ctx, Object msg) {
+    public void tryToAuth(ChannelHandlerContext ctx, Object msg, Server server) {
         TryToAuth auth = (TryToAuth) msg;
-        String name = manager.getNickNameByLoginAndPassword(auth.getLogin(), auth.getPassword());
+        String name = server.getManager().getNickNameByLoginAndPassword(auth.getLogin(), auth.getPassword());
         if (!names.contains(name) && name != null) {
             names.add(name);
             AuthName authName = new AuthName();
