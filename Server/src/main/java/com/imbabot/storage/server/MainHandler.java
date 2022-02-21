@@ -17,10 +17,14 @@ import java.util.List;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
 
-    private static AuthManager manager = new BasicAuthManager();
+    private AuthManager manager;
     private static List<String> names = new ArrayList<>();
 
+
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        manager = new SqlAuthManager();
+        manager.connect();
+
         try {
             if (msg instanceof FileRequest) {
                 sendFileToClient(ctx, msg);
@@ -42,6 +46,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             }
         } finally {
             ReferenceCountUtil.release(msg);
+            manager.close();
         }
     }
 
