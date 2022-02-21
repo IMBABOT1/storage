@@ -97,7 +97,6 @@ public class Controller implements Initializable {
                             createDirectory(msg);
                             AuthName name = new AuthName();
                             nickName = name.getName();
-                            System.out.println(321);
                             refreshClientList();
                             refreshServerList();
                             break;
@@ -137,6 +136,10 @@ public class Controller implements Initializable {
         if (!directory.exists()){
             directory.mkdir();
         }
+        String temp = "server_storage_" + ((AuthName) msg).getName();
+        ServerStorage storage = new ServerStorage();
+        storage.setStorage(temp);
+        Network.sendMsg(storage);
     }
 
 

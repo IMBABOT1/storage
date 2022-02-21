@@ -8,6 +8,7 @@ import io.netty.util.ReferenceCounted;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,8 +46,20 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             if (msg instanceof TryToAuth) {
                 tryToAuth(ctx, msg, server);
             }
+            if (msg instanceof ServerStorage){
+                createDirectory(ctx, msg);
+            }
+
         } finally {
             ReferenceCountUtil.release(msg);
+        }
+    }
+
+    private void createDirectory(ChannelHandlerContext ctx, Object msg){
+        ServerStorage storage = (ServerStorage) msg;
+        File directory = new File(storage.getStorage());
+        if (!directory.exists()){
+            directory.mkdir();
         }
     }
 
