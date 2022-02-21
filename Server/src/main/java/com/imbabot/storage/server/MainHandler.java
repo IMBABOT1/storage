@@ -49,7 +49,6 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             if (msg instanceof ServerStorage){
                 createDirectory(ctx, msg);
             }
-
         } finally {
             ReferenceCountUtil.release(msg);
         }

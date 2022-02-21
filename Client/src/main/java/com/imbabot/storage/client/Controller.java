@@ -53,6 +53,9 @@ public class Controller implements Initializable {
     }
     private boolean authenticated;
 
+    File directory;
+
+
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
 //        loginBox.setVisible(!authenticated);
@@ -85,6 +88,7 @@ public class Controller implements Initializable {
         clientHandler = new ClientHandler(this);
         setAuthenticated(false);
 
+
         Network.start(8189);
         Thread t = new Thread(new Runnable() {
             @Override
@@ -94,6 +98,7 @@ public class Controller implements Initializable {
                         AbstractMessage msg = Network.readObj();
                         if (msg instanceof AuthName){
                             setAuthenticated(true);
+                            dire
                             createDirectory(msg);
                             AuthName name = new AuthName();
                             nickName = name.getName();
@@ -144,7 +149,7 @@ public class Controller implements Initializable {
 
 
     public void sendFile()throws IOException {
-        if (Files.exists(Paths.get("client_storage/" + clientList.getSelectionModel().getSelectedItem()))){
+        if (Files.exists(Paths.get("client_storage" + clientList.getSelectionModel().getSelectedItem()))){
             FileMessage fm = new FileMessage(Paths.get("client_storage/" + clientList.getSelectionModel().getSelectedItem()));
             Network.sendMsg(fm);
             refreshServerList();
