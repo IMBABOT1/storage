@@ -21,6 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class Controller implements Initializable {
@@ -89,13 +92,14 @@ public class Controller implements Initializable {
         setAuthenticated(false);
 
         Network.start(8189);
-        Thread t = new Thread(new Runnable() {
+        ExecutorService service = Executors.newFixedThreadPool(2);
+        Future<String> f = service.submit(new Callable<String>() {
             @Override
-            public void run() {
+            public String call() throws Exception {
                 try {
                     while (true) {
                         AbstractMessage msg = Network.readObj();
-                        if (msg instanceof AuthName){
+                        if (msg instanceof AuthName) {
                             setAuthenticated(true);
                             createDirectory(msg);
                             String path = "client_storage_" + ((AuthName) msg).getName();
@@ -125,10 +129,11 @@ public class Controller implements Initializable {
                 }finally {
                     Network.stop();
                 }
+                return "321";
             }
         });
-        t.setDaemon(true);
-        t.start();
+
+
 
 
         refreshClientList();
