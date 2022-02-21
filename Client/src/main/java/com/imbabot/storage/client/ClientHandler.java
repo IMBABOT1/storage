@@ -26,7 +26,7 @@ public class ClientHandler {
             public void run() {
                 controller.serverList.getItems().clear();
                 for (String s : sf.getList()) {
-                     controller.serverList.getItems().add(s);
+                    controller.serverList.getItems().add(s);
                 }
             }
         });

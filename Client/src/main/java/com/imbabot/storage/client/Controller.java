@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
+import java.util.concurrent.Future;
 
 public class Controller implements Initializable {
 
@@ -53,7 +54,7 @@ public class Controller implements Initializable {
     }
     private boolean authenticated;
 
-
+    private String path;
 
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
@@ -87,7 +88,6 @@ public class Controller implements Initializable {
         clientHandler = new ClientHandler(this);
         setAuthenticated(false);
 
-
         Network.start(8189);
         Thread t = new Thread(new Runnable() {
             @Override
@@ -98,6 +98,7 @@ public class Controller implements Initializable {
                         if (msg instanceof AuthName){
                             setAuthenticated(true);
                             createDirectory(msg);
+                            String path = "client_storage_" + ((AuthName) msg).getName();
                             AuthName name = new AuthName();
                             nickName = name.getName();
                             refreshClientList();
@@ -134,7 +135,7 @@ public class Controller implements Initializable {
         refreshServerList();
     }
 
-    private File createDirectory(AbstractMessage msg){
+    private void createDirectory(AbstractMessage msg){
         File directory = new File("client_storage_" + ((AuthName) msg).getName());
         if (!directory.exists()){
             directory.mkdir();
@@ -143,10 +144,6 @@ public class Controller implements Initializable {
         ServerStorage storage = new ServerStorage();
         storage.setStorage(temp);
         Network.sendMsg(storage);
-
-
-
-        return directory;
 
     }
 
