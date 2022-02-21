@@ -14,6 +14,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -40,7 +41,7 @@ public class Controller implements Initializable {
     PasswordField passField;
 
     @FXML
-    Button refreshClient, sendFile, deleteFromClient, closeSession, refreshServerList, downloadFile, deleteFromServer;
+    Button  sendFile, deleteFromClient, closeSession,  downloadFile, deleteFromServer;
 
     @FXML
     HBox loginBox;
@@ -93,8 +94,10 @@ public class Controller implements Initializable {
                         AbstractMessage msg = Network.readObj();
                         if (msg instanceof AuthName){
                             setAuthenticated(true);
+                            createDirectory(msg);
                             AuthName name = new AuthName();
                             nickName = name.getName();
+                            System.out.println(321);
                             refreshClientList();
                             refreshServerList();
                             break;
@@ -127,6 +130,13 @@ public class Controller implements Initializable {
 
         refreshClientList();
         refreshServerList();
+    }
+
+    private void createDirectory(AbstractMessage msg){
+        File directory = new File("client_storage_" + ((AuthName) msg).getName());
+        if (!directory.exists()){
+            directory.mkdir();
+        }
     }
 
 
