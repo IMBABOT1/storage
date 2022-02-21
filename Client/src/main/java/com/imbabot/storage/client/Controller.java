@@ -104,7 +104,7 @@ public class Controller implements Initializable {
                             break;
                         }
                     }
-                    while (true && authenticated == true) {
+                    while (true) {
                         while (true) {
                             AbstractMessage msg = Network.readObj();
                             if (msg instanceof FileMessage) {
