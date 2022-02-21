@@ -53,7 +53,6 @@ public class Controller implements Initializable {
     }
     private boolean authenticated;
 
-    File directory;
 
 
     public void setAuthenticated(boolean authenticated) {
@@ -98,7 +97,6 @@ public class Controller implements Initializable {
                         AbstractMessage msg = Network.readObj();
                         if (msg instanceof AuthName){
                             setAuthenticated(true);
-                            dire
                             createDirectory(msg);
                             AuthName name = new AuthName();
                             nickName = name.getName();
@@ -126,7 +124,7 @@ public class Controller implements Initializable {
                 }finally {
                     Network.stop();
                 }
-                }
+            }
         });
         t.setDaemon(true);
         t.start();
@@ -136,7 +134,7 @@ public class Controller implements Initializable {
         refreshServerList();
     }
 
-    private void createDirectory(AbstractMessage msg){
+    private File createDirectory(AbstractMessage msg){
         File directory = new File("client_storage_" + ((AuthName) msg).getName());
         if (!directory.exists()){
             directory.mkdir();
@@ -145,11 +143,16 @@ public class Controller implements Initializable {
         ServerStorage storage = new ServerStorage();
         storage.setStorage(temp);
         Network.sendMsg(storage);
+
+
+
+        return directory;
+
     }
 
 
     public void sendFile()throws IOException {
-        if (Files.exists(Paths.get("client_storage" + clientList.getSelectionModel().getSelectedItem()))){
+        if (Files.exists(Paths.get("client_storage/" + clientList.getSelectionModel().getSelectedItem()))){
             FileMessage fm = new FileMessage(Paths.get("client_storage/" + clientList.getSelectionModel().getSelectedItem()));
             Network.sendMsg(fm);
             refreshServerList();
