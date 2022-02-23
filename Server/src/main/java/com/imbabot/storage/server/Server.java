@@ -39,7 +39,7 @@ public class Server {
                             socketChannel.pipeline().addLast(
                                     new ObjectDecoder(1024 * 1024 * 100, ClassResolvers.cacheDisabled(null)),
                                     new ObjectEncoder(),
-                                    new MainHandler(server));
+                                    new InputClearFileHandler(server));
                         }
                     })
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
