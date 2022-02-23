@@ -14,8 +14,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -141,11 +140,14 @@ public class Controller implements Initializable {
 
     }
 
-    private String getPath(String path){
-
-        System.out.println(path);
-
-        return path;
+    private void getPath(String path){
+        try {
+            PrintWriter writer = new PrintWriter("path.txt", "UTF-8");
+            writer.println(path);
+            writer.close();
+        }catch (FileNotFoundException | UnsupportedEncodingException e){
+            throw new RuntimeException("wrong file");
+        }
     }
 
     private void createDirectory(AbstractMessage msg) throws IOException{
