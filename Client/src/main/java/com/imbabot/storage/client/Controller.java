@@ -21,10 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class Controller implements Initializable {
 
@@ -90,6 +87,7 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         clientHandler = new ClientHandler(this);
         setAuthenticated(false);
+
 
         Network.start(8189);
         Thread t = new Thread(new Runnable() {
