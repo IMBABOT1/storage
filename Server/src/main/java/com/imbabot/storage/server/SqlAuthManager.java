@@ -53,7 +53,5 @@ public class SqlAuthManager implements AuthManager{
             throw new RuntimeException("Unable to get name by login/password");
         }
         return result;
-       }
     }
-
-
+}

@@ -1,7 +1,6 @@
 package com.imbabot.storage.server;
 //
 import com.imbabot.storage.common.*;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
@@ -9,20 +8,21 @@ import io.netty.util.ReferenceCounted;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-class InputClearFileHandler extends ChannelInboundHandlerAdapter {
+public class MainHandler extends ChannelInboundHandlerAdapter {
 
- //  private AuthManager manager;
+    //  private AuthManager manager;
     private static List<String> names = new ArrayList<>();
     private Server server;
 
-    public InputClearFileHandler(Server server){
+    public MainHandler(Server server){
         this.server = server;
     }
 
@@ -54,10 +54,11 @@ class InputClearFileHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private void createDirectory(ChannelHandlerContext ctx, Object msg) throws IOException{
+    private void createDirectory(ChannelHandlerContext ctx, Object msg){
         ServerStorage storage = (ServerStorage) msg;
-        if (!Files.exists(Paths.get(storage.getStorage()))){
-            Files.createDirectory(Paths.get(storage.getStorage()));
+        File directory = new File(storage.getStorage());
+        if (!directory.exists()){
+            directory.mkdir();
         }
     }
 
@@ -77,16 +78,9 @@ class InputClearFileHandler extends ChannelInboundHandlerAdapter {
         ctx.writeAndFlush(serverFiles);
     }
 
-
-    private void getFileFromClient(ChannelHandlerContext ctx, Object msg) throws IOException { FileMessage fm = (FileMessage) msg;
-//        Files.write(Paths.get("server_storage/" + fm.getFileName()), fm.getData());
-        ByteBuf buf = (ByteBuf) msg;
-       try (BufferedOutputStream out  = new BufferedOutputStream(new FileOutputStream("server_storage/" + fm.getFileName(), true))) {
-           while (buf.readableBytes() > 0) {
-               out.write(buf.readByte());
-           }
-       }
-        buf.release();
+    private void getFileFromClient(ChannelHandlerContext ctx, Object msg) throws IOException {
+        FileMessage fm = (FileMessage) msg;
+        Files.write(Paths.get("server_storage/" + fm.getFileName()), fm.getData());
     }
 
     private void deleteFile(ChannelHandlerContext ctx, Object msg) throws IOException {
@@ -118,4 +112,3 @@ class InputClearFileHandler extends ChannelInboundHandlerAdapter {
         }
     }
 }
-

@@ -2,8 +2,6 @@ package com.imbabot.storage.client;
 
 
 import com.imbabot.storage.common.*;
-import io.netty.channel.DefaultFileRegion;
-import io.netty.channel.FileRegion;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,7 +21,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class Controller implements Initializable {
 
@@ -90,68 +91,52 @@ public class Controller implements Initializable {
         clientHandler = new ClientHandler(this);
         setAuthenticated(false);
 
-        try {
-            CountDownLatch cdl = new CountDownLatch(1);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Network.getInstance().start(cdl);
+        Network.start(8189);
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (true) {
+                        AbstractMessage msg = Network.readObj();
+                        if (msg instanceof AuthName){
+                            setAuthenticated(true);
+                            createDirectory(msg);
+                            String path = "client_storage_" + ((AuthName) msg).getName();
+                            AuthName name = new AuthName();
+                            nickName = name.getName();
+                            refreshClientList();
+                            refreshServerList();
+                            break;
+                        }
+                    }
+                    while (true) {
+                        while (true) {
+                            AbstractMessage msg = Network.readObj();
+                            if (msg instanceof FileMessage) {
+                                clientHandler.downloadFile(msg);
+                            }
+                            if (msg instanceof ServerFiles) {
+                                clientHandler.getServerFiles(msg);
+                            }
+                            if (msg instanceof CloseConnection) {
+                                clientHandler.closeConnection(msg);
+                            }
+                        }
+                    }
+                } catch (ClassNotFoundException | IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    Network.stop();
                 }
-            }).start();
-            cdl.await();
-        }catch (InterruptedException e){
-            throw new RuntimeException("Network is not available");
-        }
-
-        FileRegion fileRegion = new DefaultFileRegion()
+            }
+        });
+        t.setDaemon(true);
+        t.start();
 
 
-//        Network.start(8189);
-//        Thread t = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    while (true) {
-//                        AbstractMessage msg = Network.readObj();
-//                        if (msg instanceof AuthName){
-//                            setAuthenticated(true);
-//                            createDirectory(msg);
-//                            String path = "client_storage_" + ((AuthName) msg).getName();
-//                            AuthName name = new AuthName();
-//                            nickName = name.getName();
-//                            refreshClientList();
-//                            refreshServerList();
-//                            break;
-//                        }
-//                    }
-//                    while (true) {
-//                        while (true) {
-//                            AbstractMessage msg = Network.readObj();
-//                            if (msg instanceof FileMessage) {
-//                                clientHandler.downloadFile(msg);
-//                            }
-//                            if (msg instanceof ServerFiles) {
-//                                clientHandler.getServerFiles(msg);
-//                            }
-//                            if (msg instanceof CloseConnection) {
-//                                clientHandler.closeConnection(msg);
-//                            }
-//                        }
-//                    }
-//                } catch (ClassNotFoundException | IOException e) {
-//                    e.printStackTrace();
-//                }finally {
-//                    Network.stop();
-//                }
-//            }
-//        });
-//        t.setDaemon(true);
-//        t.start();
-//
-//
-//
-//        refreshClientList();
-//        refreshServerList();
+
+        refreshClientList();
+        refreshServerList();
 
     }
 
