@@ -102,7 +102,6 @@ public class Controller implements Initializable {
                             setAuthenticated(true);
                             createDirectory(msg);
                             String path = "client_storage_" + ((AuthName) msg).getName();
-                            getPath(path);
                             AuthName name = new AuthName();
                             nickName = name.getName();
                             refreshClientList();
@@ -141,19 +140,7 @@ public class Controller implements Initializable {
 
     }
 
-    private void getPath(String path){
-        try {
-            PrintWriter writer = new PrintWriter("path.txt", "UTF-8");
-            writer.println(path);
-            writer.close();
-        }catch (FileNotFoundException | UnsupportedEncodingException e){
-            throw new RuntimeException("wrong file");
-        }
-    }
-
     private void createDirectory(AbstractMessage msg) throws IOException{
-
-        String content = new String(Files.readAllBytes(Paths.get("path.txt")));
 
         if (!Files.exists(Paths.get("client_storage_" + ((AuthName) msg).getName()))){
             Files.createDirectory(Paths.get("client_storage_" + ((AuthName) msg).getName()));
