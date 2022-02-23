@@ -92,17 +92,17 @@ public class Controller implements Initializable {
         setAuthenticated(false);
 
         Network.start(8189);
-        ExecutorService service = Executors.newFixedThreadPool(2);
-        Future<String> f = service.submit(new Callable<String>() {
+        Thread t = new Thread(new Runnable() {
             @Override
-            public String call() throws Exception {
+            public void run() {
                 try {
                     while (true) {
                         AbstractMessage msg = Network.readObj();
-                        if (msg instanceof AuthName) {
+                        if (msg instanceof AuthName){
                             setAuthenticated(true);
                             createDirectory(msg);
                             String path = "client_storage_" + ((AuthName) msg).getName();
+                            getPath(path);
                             AuthName name = new AuthName();
                             nickName = name.getName();
                             refreshClientList();
@@ -129,21 +129,30 @@ public class Controller implements Initializable {
                 }finally {
                     Network.stop();
                 }
-                return "321";
             }
         });
-
+        t.setDaemon(true);
+        t.start();
 
 
 
         refreshClientList();
         refreshServerList();
+
+    }
+
+    private String getPath(String path){
+
+        System.out.println(path);
+
+        return path;
     }
 
     private void createDirectory(AbstractMessage msg) throws IOException{
         if (!Files.exists(Paths.get("client_storage_" + ((AuthName) msg).getName()))){
             Files.createDirectory(Paths.get("client_storage_" + ((AuthName) msg).getName()));
         }
+
         String temp = "server_storage_" + ((AuthName) msg).getName();
         ServerStorage storage = new ServerStorage();
         storage.setStorage(temp);
