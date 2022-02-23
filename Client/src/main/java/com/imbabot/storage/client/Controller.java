@@ -13,6 +13,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import sun.misc.IOUtils;
 
 import java.io.*;
 import java.net.URL;
@@ -151,6 +152,9 @@ public class Controller implements Initializable {
     }
 
     private void createDirectory(AbstractMessage msg) throws IOException{
+
+        String content = new String(Files.readAllBytes(Paths.get("path.txt")));
+
         if (!Files.exists(Paths.get("client_storage_" + ((AuthName) msg).getName()))){
             Files.createDirectory(Paths.get("client_storage_" + ((AuthName) msg).getName()));
         }
