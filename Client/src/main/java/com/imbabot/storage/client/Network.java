@@ -1,68 +1,66 @@
 package com.imbabot.storage.client;
 
 import com.imbabot.storage.common.AbstractMessage;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 
 import java.io.*;
-import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.concurrent.CountDownLatch;
-
 
 public class Network {
-    private static Network ourInstance = new Network();
+    private static Socket socket;
+    private static ObjectEncoderOutputStream out;
+    private static ObjectDecoderInputStream in;
 
-    public static Network getInstance() {
-        return ourInstance;
-    }
 
-    private Network() {
-    }
-
-    private Channel currentChannel;
-
-    public Channel getCurrentChannel() {
-        return currentChannel;
-    }
-
-    public void start(CountDownLatch countDownLatch) {
-        EventLoopGroup group = new NioEventLoopGroup();
+    public static void start(int port){
         try {
-            Bootstrap clientBootstrap = new Bootstrap();
-            clientBootstrap.group(group);
-            clientBootstrap.channel(NioSocketChannel.class);
-            clientBootstrap.remoteAddress(new InetSocketAddress("localhost", 8189));
-            clientBootstrap.handler(new ChannelInitializer<SocketChannel>() {
-                protected void initChannel(SocketChannel socketChannel) throws Exception {
-                    socketChannel.pipeline().addLast();
-                    currentChannel = socketChannel;
-                }
-            });
-            ChannelFuture channelFuture = clientBootstrap.connect().sync();
-            countDownLatch.countDown();
-            channelFuture.channel().closeFuture().sync();
-        } catch (Exception e) {
+            socket = new Socket("localhost", port);
+            in = new ObjectDecoderInputStream(socket.getInputStream());
+            out = new ObjectEncoderOutputStream(socket.getOutputStream());
+        }catch (IOException e){
             e.printStackTrace();
-        } finally {
-            try {
-                group.shutdownGracefully().sync();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 
-    public void stop() {
-        currentChannel.close();
+    public static boolean sendMsg(AbstractMessage message){
+        try {
+            out.writeObject(message);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static AbstractMessage readObj() throws ClassNotFoundException, IOException {
+        AbstractMessage msg = (AbstractMessage) in.readObject();
+        return msg;
+    }
+
+    public static void stop(){
+        try {
+            if (in != null) {
+                in.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (out != null) {
+                out.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (socket != null) {
+                socket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

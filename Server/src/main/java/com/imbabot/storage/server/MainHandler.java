@@ -1,7 +1,6 @@
 package com.imbabot.storage.server;
 //
 import com.imbabot.storage.common.*;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
@@ -9,9 +8,7 @@ import io.netty.util.ReferenceCounted;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,13 +16,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InputClearFileHandler extends ChannelInboundHandlerAdapter {
+public class MainHandler extends ChannelInboundHandlerAdapter {
 
     //  private AuthManager manager;
     private static List<String> names = new ArrayList<>();
     private Server server;
 
-    public InputClearFileHandler(Server server){
+    public MainHandler(Server server){
         this.server = server;
     }
 
@@ -81,14 +78,11 @@ public class InputClearFileHandler extends ChannelInboundHandlerAdapter {
         ctx.writeAndFlush(serverFiles);
     }
 
-
     private void getFileFromClient(ChannelHandlerContext ctx, Object msg) throws IOException {
-
-        System.out.println(msg);
-
         FileMessage fm = (FileMessage) msg;
         Files.write(Paths.get("server_storage/" + fm.getFileName()), fm.getData());
     }
+
     private void deleteFile(ChannelHandlerContext ctx, Object msg) throws IOException {
         DeleteFileFromServer delete = (DeleteFileFromServer) msg;
         Files.delete(Paths.get("server_storage/" + delete.getName()));
