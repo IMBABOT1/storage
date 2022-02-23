@@ -54,11 +54,10 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private void createDirectory(ChannelHandlerContext ctx, Object msg){
+    private void createDirectory(ChannelHandlerContext ctx, Object msg) throws IOException{
         ServerStorage storage = (ServerStorage) msg;
-        File directory = new File(storage.getStorage());
-        if (!directory.exists()){
-            directory.mkdir();
+        if (!Files.exists(Paths.get(storage.getStorage()))){
+            Files.createDirectory(Paths.get(storage.getStorage()));
         }
     }
 

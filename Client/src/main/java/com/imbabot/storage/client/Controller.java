@@ -140,16 +140,14 @@ public class Controller implements Initializable {
         refreshServerList();
     }
 
-    private void createDirectory(AbstractMessage msg){
-        File directory = new File("client_storage_" + ((AuthName) msg).getName());
-        if (!directory.exists()){
-            directory.mkdir();
+    private void createDirectory(AbstractMessage msg) throws IOException{
+        if (!Files.exists(Paths.get("client_storage_" + ((AuthName) msg).getName()))){
+            Files.createDirectory(Paths.get("client_storage_" + ((AuthName) msg).getName()));
         }
         String temp = "server_storage_" + ((AuthName) msg).getName();
         ServerStorage storage = new ServerStorage();
         storage.setStorage(temp);
         Network.sendMsg(storage);
-
     }
 
 
