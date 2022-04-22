@@ -141,9 +141,7 @@ public class Controller implements Initializable {
 
     private void checkAndCreateDirectories() throws IOException{
         if (!Files.exists(Paths.get("client_storage_" + nickName))) {
-            System.out.println(nickName);
             Files.createDirectory(Paths.get("client_storage_" + nickName));
-            System.out.println(nickName);
         }
         if (!Files.exists(Paths.get("server_storage_" + nickName))) {
             Files.createDirectory(Paths.get("server_storage_" + nickName));
@@ -151,22 +149,32 @@ public class Controller implements Initializable {
     }
 
     public void sendFile()throws IOException {
-        if (Files.exists(Paths.get("client_storage/" + clientList.getSelectionModel().getSelectedItem()))){
-            FileMessage fm = new FileMessage(Paths.get("client_storage/" + clientList.getSelectionModel().getSelectedItem()));
+        if (Files.exists(Paths.get("client_storage_" + clientList.getSelectionModel().getSelectedItem()))){
+            FileMessage fm = new FileMessage(Paths.get("client_storage_" + clientList.getSelectionModel().getSelectedItem()));
             Network.sendMsg(fm);
             refreshServerList();
         }
     }
 
     public void deleteFileFromClient() throws IOException{
-        Files.delete(Paths.get("client_storage/" + clientList.getSelectionModel().getSelectedItem()));
-        refreshClientList();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Files.delete(Paths.get("client_storage_" + clientList.getSelectionModel().getSelectedItem()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                refreshClientList();
+            }
+        });
+
     }
 
     public void refreshClientList(){
         try {
             clientList.getItems().clear();
-            Files.list(Paths.get("client_storage/")).map(path -> path.getFileName().toString()).forEach(o -> clientList.getItems().add(o));
+            Files.list(Paths.get("client_storage_" + nickName)).map(path -> path.getFileName().toString()).forEach(o -> clientList.getItems().add(o));
         } catch (IOException e) {
             e.printStackTrace();
         }
