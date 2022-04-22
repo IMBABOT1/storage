@@ -72,8 +72,9 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     }
 
     private void sendServerFilesList(ChannelHandlerContext ctx, Object msg) throws IOException {
+        RequestServerFiles files = (RequestServerFiles) msg;
         List<String> list = new ArrayList<>();
-        Files.list(Paths.get("server_Storage/")).map(path -> path.getFileName().toString()).forEach(o -> list.add(o));
+        Files.list(Paths.get("server_Storage_" + files.getUser())).map(path -> path.getFileName().toString()).forEach(o -> list.add(o));
         ServerFiles serverFiles = new ServerFiles(list);
         ctx.writeAndFlush(serverFiles);
     }

@@ -10,6 +10,7 @@ public class FileMessage extends AbstractMessage {
     private String fileName;
     private byte[] data;
 
+
     public String getFileName(){
         return fileName;
     }
@@ -18,8 +19,10 @@ public class FileMessage extends AbstractMessage {
     }
 
 
+
     public FileMessage(Path path) throws IOException {
         fileName = path.getFileName().toString();
         data = Files.readAllBytes(path);
+
     }
 }

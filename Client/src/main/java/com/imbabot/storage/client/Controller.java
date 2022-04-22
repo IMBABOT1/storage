@@ -103,8 +103,8 @@ public class Controller implements Initializable {
                             nickName = ((AuthName) msg).getName();
                             String path = "client_storage_" + nickName;
                             checkAndCreateDirectories();
-                            refreshClientList();
                             refreshServerList();
+                            refreshClientList();
                             break;
                         }
                     }
@@ -133,10 +133,8 @@ public class Controller implements Initializable {
         t.start();
 
 
-
-        refreshClientList();
         refreshServerList();
-
+        refreshClientList();
     }
 
     private void checkAndCreateDirectories() throws IOException{
@@ -194,7 +192,10 @@ public class Controller implements Initializable {
     }
 
     public void refreshServerList(){
-        Network.sendMsg(new RequestServerFiles());
+        if (authenticated) {
+            System.out.println(nickName);
+            Network.sendMsg(new RequestServerFiles(nickName));
+        }
     }
 
     public void tryToAuth(ActionEvent actionEvent) {
