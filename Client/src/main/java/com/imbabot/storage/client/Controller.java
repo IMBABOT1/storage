@@ -100,10 +100,9 @@ public class Controller implements Initializable {
                         AbstractMessage msg = Network.readObj();
                         if (msg instanceof AuthName){
                             setAuthenticated(true);
-                            createDirectory(msg);
-                            String path = "client_storage_" + ((AuthName) msg).getName();
-                            AuthName name = new AuthName();
-                            nickName = name.getName();
+                            nickName = ((AuthName) msg).getName();
+                            String path = "client_storage_" + nickName;
+                            checkAndCreateDirectories();
                             refreshClientList();
                             refreshServerList();
                             break;
@@ -140,18 +139,16 @@ public class Controller implements Initializable {
 
     }
 
-    private void createDirectory(AbstractMessage msg) throws IOException{
-
-        if (!Files.exists(Paths.get("client_storage_" + ((AuthName) msg).getName()))){
-            Files.createDirectory(Paths.get("client_storage_" + ((AuthName) msg).getName()));
+    private void checkAndCreateDirectories() throws IOException{
+        if (!Files.exists(Paths.get("client_storage_" + nickName))) {
+            System.out.println(nickName);
+            Files.createDirectory(Paths.get("client_storage_" + nickName));
+            System.out.println(nickName);
         }
-
-        String temp = "server_storage_" + ((AuthName) msg).getName();
-        ServerStorage storage = new ServerStorage();
-        storage.setStorage(temp);
-        Network.sendMsg(storage);
+        if (!Files.exists(Paths.get("server_storage_" + nickName))) {
+            Files.createDirectory(Paths.get("server_storage_" + nickName));
+        }
     }
-
 
     public void sendFile()throws IOException {
         if (Files.exists(Paths.get("client_storage/" + clientList.getSelectionModel().getSelectedItem()))){
