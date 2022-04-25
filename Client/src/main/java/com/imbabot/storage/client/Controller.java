@@ -190,7 +190,7 @@ public class Controller implements Initializable {
             @Override
             public void run() {
                 try {
-                    Files.delete(Paths.get("client_storage_" + clientList.getSelectionModel().getSelectedItem()));
+                    Files.delete(Paths.get("client_storage_" + nickName + "\\" + clientList.getSelectionModel().getSelectedItem()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
