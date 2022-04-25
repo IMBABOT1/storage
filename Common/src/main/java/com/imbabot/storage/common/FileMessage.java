@@ -12,7 +12,6 @@ public class FileMessage extends AbstractMessage {
     private String name;
 
 
-
     public String getFileName(){
         return fileName;
     }

@@ -165,7 +165,7 @@ public class Controller implements Initializable {
             public void run() {
                 FileMessage fm = (FileMessage) msg;
                 try {
-                    Files.write(Paths.get("client_storage/" + fm.getFileName()), fm.getData());
+                    Files.write(Paths.get("client_storage_" + fm.getName() + "\\" + fm.getFileName()), fm.getData());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -216,7 +216,7 @@ public class Controller implements Initializable {
     }
 
     public void deleteFileFromServer(){
-        Network.sendMsg(new DeleteFileFromServer(serverList.getSelectionModel().getSelectedItem()));
+        Network.sendMsg(new DeleteFileFromServer(serverList.getSelectionModel().getSelectedItem(), nickName));
         refreshServerList();
     }
 

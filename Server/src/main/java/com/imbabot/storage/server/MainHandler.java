@@ -30,7 +30,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
             if (msg instanceof FileRequest) {
-                //sendFileToClient(ctx, msg);
+                sendFileToClient(ctx, msg);
             }
             if (msg instanceof RequestServerFiles) {
                 sendServerFilesList(ctx, msg);
@@ -64,13 +64,13 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     }
 
 
-//    private void sendFileToClient(ChannelHandlerContext ctx, Object msg) throws IOException {
-//        FileRequest fr = (FileRequest) msg;
-//        if (Files.exists(Paths.get("server_storage/" + fr.getFileName()))) {
-//            FileMessage fm = new FileMessage(Paths.get("server_storage/" + fr.getFileName()));
-//            ctx.writeAndFlush(fm);
-//        }
-//    }
+    private void sendFileToClient(ChannelHandlerContext ctx, Object msg) throws IOException {
+        FileRequest fr = (FileRequest) msg;
+        if (Files.exists(Paths.get("server_storage_" + fr.user + "\\" + fr.getFileName()))) {
+            FileMessage fm = new FileMessage(Paths.get("server_storage_" + fr.user + "\\" +fr.getFileName()), fr.user);
+            ctx.writeAndFlush(fm);
+        }
+    }
 
     private void sendServerFilesList(ChannelHandlerContext ctx, Object msg) throws IOException {
         RequestServerFiles files = (RequestServerFiles) msg;
@@ -88,7 +88,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
     private void deleteFile(ChannelHandlerContext ctx, Object msg) throws IOException {
         DeleteFileFromServer delete = (DeleteFileFromServer) msg;
-        Files.delete(Paths.get("server_storage/" + delete.getName()));
+        Files.delete(Paths.get("server_storage_" + delete.getUserName() + "\\" + delete.getName()));
     }
 
     private void closeConnection(ChannelHandlerContext ctx, Object msg) throws IOException {
