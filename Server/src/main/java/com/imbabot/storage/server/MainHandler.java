@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
@@ -90,7 +91,14 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     }
 
     private void closeConnection(ChannelHandlerContext ctx, Object msg) throws IOException {
-        CloseConnection cs = new CloseConnection();
+        CloseConnection cs = (CloseConnection) msg;
+        System.out.println(cs.getName());
+        Iterator<String> iter = names.iterator();
+        while (iter.hasNext()) {
+            if (iter.next().equals(cs.getName())) {
+                iter.remove();
+            }
+        }
         ctx.writeAndFlush(cs);
         ctx.close();
     }

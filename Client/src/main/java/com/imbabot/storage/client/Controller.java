@@ -50,11 +50,6 @@ public class Controller implements Initializable {
     @FXML
     HBox loginBox;
 
-<<<<<<< HEAD
-
-=======
-    private ClientHandler clientHandler;
->>>>>>> d231f1215b4c7892af64ab32083b02099f331595
     private String nickName;
     public String getName(){
         return nickName;
@@ -91,12 +86,7 @@ public class Controller implements Initializable {
     }
 
     @Override
-<<<<<<< HEAD
-    public void initialize(URL location, ResourceBundle resources) {;
-=======
     public void initialize(URL location, ResourceBundle resources) {
-        clientHandler = new ClientHandler(this);
->>>>>>> d231f1215b4c7892af64ab32083b02099f331595
         setAuthenticated(false);
 
         Network.start(8189);
@@ -111,8 +101,10 @@ public class Controller implements Initializable {
                             nickName = ((AuthName) msg).getName();
                             String path = "client_storage_" + nickName;
                             checkAndCreateDirectories();
-                            refreshServerList();
-                            refreshClientList();
+                            if (authenticated) {
+                                refreshServerList();
+                                refreshClientList();
+                            }
                             break;
                         }
                     }
@@ -120,23 +112,13 @@ public class Controller implements Initializable {
                         while (true) {
                             AbstractMessage msg = Network.readObj();
                             if (msg instanceof FileMessage) {
-<<<<<<< HEAD
-                                    downloadFile(msg);
+                                downloadFile(msg);
                             }
                             if (msg instanceof ServerFiles) {
-                                    getServerFiles(msg);
+                                getServerFiles(msg);
                             }
                             if (msg instanceof CloseConnection) {
-                                System.exit(0);
-=======
-                                clientHandler.downloadFile(msg);
-                            }
-                            if (msg instanceof ServerFiles) {
-                                clientHandler.getServerFiles(msg);
-                            }
-                            if (msg instanceof CloseConnection) {
-                                clientHandler.closeConnection(msg);
->>>>>>> d231f1215b4c7892af64ab32083b02099f331595
+                                closeConnection(msg);
                             }
                         }
                     }
@@ -150,10 +132,18 @@ public class Controller implements Initializable {
         t.setDaemon(true);
         t.start();
 
-<<<<<<< HEAD
         if (authenticated) {
             refreshServerList();
             refreshClientList();
+        }
+    }
+
+    private void checkAndCreateDirectories() throws IOException{
+        if (!Files.exists(Paths.get("client_storage_" + nickName))) {
+            Files.createDirectory(Paths.get("client_storage_" + nickName));
+        }
+        if (!Files.exists(Paths.get("server_storage_" + nickName))) {
+            Files.createDirectory(Paths.get("server_storage_" + nickName));
         }
     }
 
@@ -186,22 +176,6 @@ public class Controller implements Initializable {
         });
     }
 
-
-=======
-
-        refreshServerList();
-        refreshClientList();
-    }
-
->>>>>>> d231f1215b4c7892af64ab32083b02099f331595
-    private void checkAndCreateDirectories() throws IOException{
-        if (!Files.exists(Paths.get("client_storage_" + nickName))) {
-            Files.createDirectory(Paths.get("client_storage_" + nickName));
-        }
-        if (!Files.exists(Paths.get("server_storage_" + nickName))) {
-            Files.createDirectory(Paths.get("server_storage_" + nickName));
-        }
-    }
 
     public void sendFile()throws IOException {
         if (Files.exists(Paths.get("client_storage_" + clientList.getSelectionModel().getSelectedItem()))){
@@ -236,15 +210,11 @@ public class Controller implements Initializable {
     }
 
     public void closeSession(){
-        Network.sendMsg(new CloseConnection());
+        Network.sendMsg(new CloseConnection(this.nickName));
     }
 
     public void downloadFile(){
-<<<<<<< HEAD
         Network.sendMsg(new FileRequest(serverList.getSelectionModel().getSelectedItem(), nickName));
-=======
-        Network.sendMsg(new FileRequest(serverList.getSelectionModel().getSelectedItem()));
->>>>>>> d231f1215b4c7892af64ab32083b02099f331595
     }
 
     public void deleteFileFromServer(){
@@ -264,4 +234,10 @@ public class Controller implements Initializable {
         loginField.clear();
         passField.clear();
     }
+
+    private void closeConnection(AbstractMessage message){
+        System.exit(0);
+    }
+
+
 }
