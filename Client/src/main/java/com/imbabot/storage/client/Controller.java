@@ -109,17 +109,15 @@ public class Controller implements Initializable {
                         }
                     }
                     while (true) {
-                        while (true) {
-                            AbstractMessage msg = Network.readObj();
-                            if (msg instanceof FileMessage) {
-                                downloadFile(msg);
-                            }
-                            if (msg instanceof ServerFiles) {
-                                getServerFiles(msg);
-                            }
-                            if (msg instanceof CloseConnection) {
+                        AbstractMessage msg = Network.readObj();
+                        if (msg instanceof FileMessage) {
+                            downloadFile(msg);
+                        }
+                        if (msg instanceof ServerFiles) {
+                            getServerFiles(msg);
+                        }
+                        if (msg instanceof CloseConnection) {
                                 closeConnection(msg);
-                            }
                         }
                     }
                 } catch (ClassNotFoundException | IOException e) {
@@ -238,6 +236,4 @@ public class Controller implements Initializable {
     private void closeConnection(AbstractMessage message){
         System.exit(0);
     }
-
-
 }
