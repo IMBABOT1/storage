@@ -176,8 +176,8 @@ public class Controller implements Initializable {
 
 
     public void sendFile()throws IOException {
-        if (Files.exists(Paths.get("client_storage_" + clientList.getSelectionModel().getSelectedItem()))){
-            FileMessage fm = new FileMessage(Paths.get("client_storage_" + clientList.getSelectionModel().getSelectedItem()));
+        if (Files.exists(Paths.get("client_storage_" + nickName + "\\" + clientList.getSelectionModel().getSelectedItem()))){
+            FileMessage fm = new FileMessage(Paths.get("client_storage_" + nickName + "\\" + clientList.getSelectionModel().getSelectedItem()), nickName);
             Network.sendMsg(fm);
             refreshServerList();
         }
