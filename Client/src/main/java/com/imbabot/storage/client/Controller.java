@@ -50,7 +50,11 @@ public class Controller implements Initializable {
     @FXML
     HBox loginBox;
 
+<<<<<<< HEAD
 
+=======
+    private ClientHandler clientHandler;
+>>>>>>> d231f1215b4c7892af64ab32083b02099f331595
     private String nickName;
     public String getName(){
         return nickName;
@@ -87,7 +91,12 @@ public class Controller implements Initializable {
     }
 
     @Override
+<<<<<<< HEAD
     public void initialize(URL location, ResourceBundle resources) {;
+=======
+    public void initialize(URL location, ResourceBundle resources) {
+        clientHandler = new ClientHandler(this);
+>>>>>>> d231f1215b4c7892af64ab32083b02099f331595
         setAuthenticated(false);
 
         Network.start(8189);
@@ -111,6 +120,7 @@ public class Controller implements Initializable {
                         while (true) {
                             AbstractMessage msg = Network.readObj();
                             if (msg instanceof FileMessage) {
+<<<<<<< HEAD
                                     downloadFile(msg);
                             }
                             if (msg instanceof ServerFiles) {
@@ -118,6 +128,15 @@ public class Controller implements Initializable {
                             }
                             if (msg instanceof CloseConnection) {
                                 System.exit(0);
+=======
+                                clientHandler.downloadFile(msg);
+                            }
+                            if (msg instanceof ServerFiles) {
+                                clientHandler.getServerFiles(msg);
+                            }
+                            if (msg instanceof CloseConnection) {
+                                clientHandler.closeConnection(msg);
+>>>>>>> d231f1215b4c7892af64ab32083b02099f331595
                             }
                         }
                     }
@@ -131,6 +150,7 @@ public class Controller implements Initializable {
         t.setDaemon(true);
         t.start();
 
+<<<<<<< HEAD
         if (authenticated) {
             refreshServerList();
             refreshClientList();
@@ -167,6 +187,13 @@ public class Controller implements Initializable {
     }
 
 
+=======
+
+        refreshServerList();
+        refreshClientList();
+    }
+
+>>>>>>> d231f1215b4c7892af64ab32083b02099f331595
     private void checkAndCreateDirectories() throws IOException{
         if (!Files.exists(Paths.get("client_storage_" + nickName))) {
             Files.createDirectory(Paths.get("client_storage_" + nickName));
@@ -213,7 +240,11 @@ public class Controller implements Initializable {
     }
 
     public void downloadFile(){
+<<<<<<< HEAD
         Network.sendMsg(new FileRequest(serverList.getSelectionModel().getSelectedItem(), nickName));
+=======
+        Network.sendMsg(new FileRequest(serverList.getSelectionModel().getSelectedItem()));
+>>>>>>> d231f1215b4c7892af64ab32083b02099f331595
     }
 
     public void deleteFileFromServer(){
