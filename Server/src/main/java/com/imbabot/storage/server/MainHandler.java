@@ -82,7 +82,6 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
     private void getFileFromClient(ChannelHandlerContext ctx, Object msg) throws IOException {
         FileMessage fm = (FileMessage) msg;
-        System.out.println("asfdfasd");
         Files.write(Paths.get("server_storage_" + fm.getName() + "\\" + fm.getFileName()), fm.getData());
     }
 
@@ -93,7 +92,6 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
     private void closeConnection(ChannelHandlerContext ctx, Object msg) throws IOException {
         CloseConnection cs = (CloseConnection) msg;
-        System.out.println(cs.getName());
         Iterator<String> iter = names.iterator();
         while (iter.hasNext()) {
             if (iter.next().equals(cs.getName())) {
